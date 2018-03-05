@@ -16,16 +16,15 @@ Underworld2 currently supports area (volume) and surface integrals. But there is
 
 Consider a 2D scalar field $F(x,y)$, where we want to determine the function representing the the integrated value over the y-axis:
 
-
-\begin{equation}f(x) = \int F(x,y) \mathop{dy}  = A_0 +  \sum_{k=1}^N a_k \cdot cos(kx)  +  b_k \cdot sin(kx)   \end{equation}
-
-
-\begin{equation} A_0 = \int_\Omega F(x,y) \mathop{dx}\mathop{dy}  \end{equation}
+$$f(x) = \int F(x,y) \mathop{dy}  = A_0 +  \sum_{k=1}^N a_k \cdot cos(kx)  +  b_k \cdot sin(kx) $$
 
 
-\begin{equation} a_k = \int_\Omega  cos(kx)\cdot F(x,y)  \mathop{dx}\mathop{dy}  \end{equation}
+$$A_0 = \int_\Omega F(x,y) \mathop{dx}\mathop{dy}  $$
 
-\begin{equation} b_k = \int_\Omega  sin(kx)\cdot  F(x,y)\mathop{dx}\mathop{dy}  \end{equation}
+
+$$a_k = \int_\Omega  cos(kx)\cdot F(x,y)  \mathop{dx}\mathop{dy} $$
+
+$$ b_k = \int_\Omega  sin(kx)\cdot  F(x,y)\mathop{dx}\mathop{dy}  $$
 
 
 The Underworld2 `function` module provides all the necessary apparatus us to compute these integrals. This proceedure provides the following advantages:
@@ -42,21 +41,22 @@ A specific application that can make use of this proceedure is the spectral doma
 First, let's consider a simple example, with a 2D function over the unit square with an origin at (0,0):
 
 
-\begin{equation} F(x,y) = \cos(\pi x) * \cos(\pi y)\end{equation}
+$$ F(x,y) = \cos(\pi x) * \cos(\pi y)$$
 
-\begin{equation}f(x) = \int F(x,y) \mathop{dy}  = \frac{2}{\pi} \sin(\pi x) \end{equation}
+$$f(x) = \int F(x,y) \mathop{dy}  = \frac{2}{\pi} \sin(\pi x) $$
 
-\begin{equation} A_0 = \int_{-0.5}^{0.5} \int_{-0.5}^{0.5} F(x,y) \mathop{dx}\mathop{dy}  = \left(\frac{2}{\pi} \right)^2 \end{equation}
+$$ A_0 = \int_{-0.5}^{0.5} \int_{-0.5}^{0.5} F(x,y) \mathop{dx}\mathop{dy}  = \left(\frac{2}{\pi} \right)^2 $$
 
-[This](https://github.com/underworldcode/underworld2/blob/master/docs/examples/1_06_Rayleigh_Taylor.ipynb) notebook shows how we can calculate the integral using Underworld2 functions.
+[This](https://github.com/dansand/gravityPt1/blob/master/pt1_Integrals.ipynb) notebook shows how we can calculate the integral using Underworld2 functions.
+
 
 ### Upward continuation of gravity
 
 Given a known subsurface density structure $\rho(x,y)$, the surface (upward continued) gravity signal can be written as:
 
-$ \Delta g (x) = 2\pi G \left[ \sum_k e^{ikx} \int_{z_0}^{z_t} \hat \Gamma(k,z)e^{-kz} dz  \right]$
+$# \Delta g (x) = 2\pi G \left[ \sum_k e^{ikx} \int_{z_0}^{z_t} \hat \Gamma(k,z)e^{-kz} dz  \right]$$
 
-[This](https://github.com/underworldcode/underworld2/blob/master/docs/examples/1_06_Rayleigh_Taylor.ipynb) notebook compares the spectral upward continuation approach with an analytic solution for a buried cylinder. 
+[This](https://github.com/dansand/gravityPt1/blob/master/pt2_gravityEx1.ipynb) notebook compares the spectral upward continuation approach with an analytic solution for a buried cylinder.
 
 ### References
 

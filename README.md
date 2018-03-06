@@ -12,12 +12,12 @@ image:  # over-ride default with feature as image path
 
 ### Overview
 
-The aim of this post is to demonstrate an interesting application of Underworld2 volume integration; namely that we can generate a spectral representation of integrals over a single axis (a functionality which is not directyl supported). The is of interest primarily because it has applications to gravity calculation (upward continuation) as well as to the application fo stress boundary conditions. 
+The aim of this post is to demonstrate a not-so-obvious application of Underworld2 volume integration; namely that we can generate a spectral representation of integrals over a single axis (a functionality which is not directyl supported). This of interest primarily because it has applications to gravity calculation (upward continuation) as well as to the application fo stress boundary conditions. 
 
 
 ### Integrals in Underworld2
 
-Underworld2 currently supports area (volume) and surface integrals. But there is no direct capacity to integrate a 2D function independently along separate axes. However, we can generate a spectral (Fouier) representation of such an integral. Throughut this post, we'll refer to this proceedre as spectral integration. 
+Underworld2 currently supports area (volume) and surface integrals. But there is no direct capacity to integrate a 2D function independently along separate axes. However, we can generate a spectral (Fouier) representation of such an integral. Throughut this post, we'll refer to this proceedre as "spectral integration". 
 
 Consider a 2D scalar field $F(x,y)$, where we want to determine the function representing the integrated value over the y-axis:
 
@@ -39,7 +39,7 @@ This proceedure provides the following advantages:
 * it can be performed in parallel, and hence during Underworld simulations, rather than as a post-processign step
 * the proceedure utilises (numerical) Fourier integrals (rather than FFT), meaning that the proceedure can be applied to deformed meshes.
 
-These spectral integrals are, however, relatively expensive to compute (i.e compared, to a similar proceedure using FFTs). They are therefore likely to be practical only in 2D.
+These spectral integrals are, however, relatively expensive to compute (i.e compared to FFTs/quadrature on the same sized arrays). They are therefore likely to be practical only in 2D.
 
 A specific application that can make use of this proceedure is the Fourier domain calculation of gravity anomalies, also known as __upward continuation__.
 
@@ -47,28 +47,28 @@ A specific application that can make use of this proceedure is the Fourier domai
 ## Examples
 
 
-### A simple example
+### An introductory example
 
-To introduce the concept, we start by considering the problem of integrating the followinf 2D function ($F(x,y)$) over the y axis:
+To introduce the concepts, we start by considering the problem of integrating a scalar 2D function ($F(x,y)$) over the y axis:
 
 $$f(x) = \int F(x,y) \mathop{dy} $$
 
 [This](https://github.com/dansand/gravityPt1/blob/master/pt1_Integrals.ipynb) notebook shows how we can calculate the function $f(x)$ using Underworld2 spectral integration.
 
 
-### Upward continuation of a gravity
+### gravity upward continuation
 
-Given a known subsurface density structure $\rho(x,y)$, the surface (upward continued) gravity signal can be written as:
+Given a known subsurface density structure $\rho(x,y)$, the surface gravity signa (upward continued) can be written as:
 
 $# \Delta g (x) = 2\pi G \left[ \sum_k e^{ikx} \int_{z_0}^{z_t} \hat \Gamma(k,z)e^{-kz} dz  \right]$$
 
-We cna perform this gravity calculation using spectral intragration. The promary differece is that we have to build the Underworld function for $e^{-kz}$, which is known as the upward continuation kernel.
+We can perform this gravity calculation using spectral intragration. Compared with the first example, the primary differece is that we have to build the Underworld function for $e^{-kz}$, which is known as the upward continuation kernel.
 
 [This](https://github.com/dansand/gravityPt1/blob/master/pt2_gravityEx1.ipynb) notebook compares the spectral upward continuation approach with an analytic solution for a buried cylinder.
 
 ###  Gravity anomalies for isoviscous convection
 
-Lateral density anamolies contribute to surface gravity anomalies directly, as well as through pertubations to the mantle boundaries (dynamic topography). In [This]() notebook, we compare our numerical proceedure to an analytic solution for (isoviscous) convection in the mantle. This demonstrates how to account for the perturbation (topgraphy) of radial density transitions, such as the core mantle boundary. 
+Lateral density anamolies contribute to surface gravity anomalies directly, as well as through pertubations to the mantle boundaries (dynamic topography). In [This](https://github.com/dansand/gravityPt1/blob/master/pt3_gravityEx2.ipynb) notebook, we compare our numerical proceedure to an analytic solution for (isoviscous) convection in the mantle. This demonstrates how to account for the perturbation (topgraphy) of radial density transitions, such as the core mantle boundary. 
 
 
 

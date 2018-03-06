@@ -107,6 +107,22 @@ def spectral_integral(mesh, fnToInt, N, axisIndex=0, kernelFn=1., average = True
     
 def integral_wavenumbers(mesh, N, axisIndex=0):
     
+    """
+    Returns a set of N - 1  angular wavenumbers (2.*pi*N/width)
+    width is the length of the mesh along the axis given by axisIndex
+    N takes the values (1, ..., N - 1), (the zeroth wavenumber is is not given) 
+    
+    Parameters
+    ----------
+    mesh: uw.mesh.FeMesh
+        The mesh over which integration is performed.
+    N: int
+       Total number of modes to use  in the spectral integral (it is assumed that this includes mode 0)
+    axisIndex: int (0, or 1)
+       Index of the mesh axis to integrate over
+    
+    """
+    
     if axisIndex == 0:
         modeaxes = 1
     elif axisIndex == 1:

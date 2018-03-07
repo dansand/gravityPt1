@@ -12,36 +12,41 @@ image:  # over-ride default with feature as image path
 
 ### Overview
 
-The aim of this post is to demonstrate a not-so-obvious application of Underworld2 volume integration; namely that we can generate a spectral representation of integrals over a single axis (a functionality which is not directyl supported). This of interest primarily because it has applications to gravity calculation (upward continuation) as well as to the application fo stress boundary conditions. 
-
+The aim of this post is to demonstrate a not-so-obvious application of Underworld2 volume integration; namely that we can generate a spectral representation of integrals over a single axis (a functionality which is not directly supported). This is of interest primarily because it has applications to gravity calculation (upward continuation). 
 
 ### Integrals in Underworld2
 
-Underworld2 currently supports area (volume) and surface integrals. But there is no direct capacity to integrate a 2D function independently along separate axes. However, we can generate a spectral (Fouier) representation of such an integral. Throughut this post, we'll refer to this proceedre as "spectral integration". 
+Underworld2 currently supports area (volume) and surface integrals. But there is no direct capacity to integrate a 2D function independently along separate axes. However, we can generate a spectral (Fourier) representation of such an integral. Throughut this post, we'll refer to this procedure as "spectral integration". 
 
 Consider a 2D scalar field $F(x,y)$, where we want to determine the function representing the integrated value over the y-axis:
 
-$$f(x) = \int F(x,y) \mathop{dy}  = A_0 +  \sum_{k=1}^N a_k \cdot cos(kx)  +  b_k \cdot sin(kx) $$
+\begin{equation}f(x) = \int_0^L F(x,y) \mathop{dy}   \end{equation}
+
+We can write this as a sum of periodic functions:
 
 
-$$A_0 = \int_\Omega F(x,y) \mathop{dx}\mathop{dy}  $$
+\begin{equation}f(x) = \frac{1}{W}  A_0  + \sum_K \frac{2}{W}  a_k \cos(kx) + \frac{2}{W}  b_k sin(kx) \end{equation} 
+
+where:
+
+\begin{equation} a_k = \int_0^L  \int_0^W \big( \mathop{F(x,y)} \cos(k x) \big)\mathop{dx}\mathop{dy} \end{equation} 
 
 
-$$a_k = \int_\Omega  cos(kx)\cdot F(x,y)  \mathop{dx}\mathop{dy} $$
-
-$$ b_k = \int_\Omega  sin(kx)\cdot  F(x,y)\mathop{dx}\mathop{dy}  $$
+\begin{equation} b_k = \int_0^L  \int_0^W \big( \mathop{F(x,y)} \sin(k x) \big)\mathop{dx}\mathop{dy} \end{equation} 
 
 
-The Underworld2 `function` module provides all the necessary apparatus us to compute these integrals, and hence the spectral coefficients  $A_0, a_k, b_k $.
+\begin{equation} A_0 = \int_0^L  \int_0^W  \mathop{F(x,y)} \mathop{dx}\mathop{dy} \end{equation} 
 
-This proceedure provides the following advantages:
+The Underworld2 `function` module provides all the necessary apparatus us to compute these volume (area) integrals, and hence find the spectral coefficients  $A_0, a_k, b_k $.
+
+This procedure provides the following advantages:
 
 * it can be performed in parallel, and hence during Underworld simulations, rather than as a post-processign step
-* the proceedure utilises (numerical) Fourier integrals (rather than FFT), meaning that the proceedure can be applied to deformed meshes.
+* the procedure utilises (numerical) Fourier integrals (rather than FFT), meaning that the procedure can be applied to deformed meshes.
 
 These spectral integrals are, however, relatively expensive to compute (i.e compared to FFTs/quadrature on the same sized arrays). They are therefore likely to be practical only in 2D.
 
-A specific application that can make use of this proceedure is the Fourier domain calculation of gravity anomalies, also known as __upward continuation__.
+A specific application that can make use of this procedure is the Fourier domain calculation of gravity anomalies, also known as __upward continuation__.
 
 
 ## Examples
@@ -58,18 +63,17 @@ $$f(x) = \int F(x,y) \mathop{dy} $$
 
 ### gravity upward continuation
 
-Given a known subsurface density structure $\rho(x,y)$, the surface gravity signa (upward continued) can be written as:
+Given a known subsurface density structure $\rho(x,y)$, the surface gravity signal (upward continued) can be written as:
 
 $# \Delta g (x) = 2\pi G \left[ \sum_k e^{ikx} \int_{z_0}^{z_t} \hat \Gamma(k,z)e^{-kz} dz  \right]$$
 
-We can perform this gravity calculation using spectral intragration. Compared with the first example, the primary differece is that we have to build the Underworld function for $e^{-kz}$, which is known as the upward continuation kernel.
+We can perform this gravity calculation using spectral intregration. Compared with the first example, the primary difference is that we have to build the Underworld function for $e^{-kz}$ (which is known as the upward continuation kernel). 
 
-[This](https://github.com/dansand/gravityPt1/blob/master/pt2_gravityEx1.ipynb) notebook compares the spectral upward continuation approach with an analytic solution for a buried cylinder.
+[This](https://github.com/dansand/gravityPt1/blob/master/pt2_gravityEx1.ipynb) notebook demonstrates gravity upward continuation using spectral integration. The proceedure is benchmarked against an analytic solution for a buried cylindrical density anomaly.
 
 ###  Gravity anomalies for isoviscous convection
 
-Lateral density anamolies contribute to surface gravity anomalies directly, as well as through pertubations to the mantle boundaries (dynamic topography). In [This](https://github.com/dansand/gravityPt1/blob/master/pt3_gravityEx2.ipynb) notebook, we compare our numerical proceedure to an analytic solution for (isoviscous) convection in the mantle. This demonstrates how to account for the perturbation (topgraphy) of radial density transitions, such as the core mantle boundary. 
-
+Lateral density anamolies contribute to surface gravity anomalies directly, as well as through perturbations to the mantle boundaries (dynamic topography). In [this](https://github.com/dansand/gravityPt1/blob/master/pt3_gravityEx2.ipynb) notebook, we compare our numerical proceedure to an analytic solution for (isoviscous) convection in the mantle. This demonstrates how to account for the perturbation (topgraphy) of radial density transitions, such as the core mantle boundary. 
 
 
 ### References
